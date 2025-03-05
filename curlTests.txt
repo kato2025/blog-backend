@@ -1,0 +1,152 @@
+TEST UNSECURED ROUTES
+*********************
+
+Display all posts
+*****************
+curl http://localhost:3000/posts
+
+Display a single post
+*********************
+curl http://localhost:3000/posts/1
+
+Create a post
+*************
+curl -X POST http://localhost:3000/posts \
+-H "Content-Type: application/json" \
+-d '{
+      "title": "My third Blog Post",
+      "content": "This is the content of my third post.",
+      "published": true,
+      "authorId": 1
+    }'
+
+Update a post
+*************
+curl -X PUT http://localhost:3000/posts/18 \
+     -H "Content-Type: application/json" \
+     -d '{
+           "title": "My third Blog Post",
+           "content": "I am a strong believer of Jesus Christ of Nazareth.",
+           "published": true
+         }'
+
+Delete a post
+*************
+curl -X DELETE http://localhost:3000/posts/23
+
+Display all com
+*****************
+curl http://localhost:3000/comments
+
+Display a single comment
+************************
+curl http://localhost:3000/comments/1
+
+Create a comment
+****************
+curl -X POST http://localhost:3000/comments \
+-H "Content-Type: application/json" \
+-d '{
+      "content": "This article was very insightful. Learned a lot from it!",
+      "username": "john_doe",
+      "email": "john.doe@example.com",
+      "postId": 14,
+      "userId": 1
+    }'
+
+Update a comment
+****************
+curl -X PUT http://localhost:3000/comments/34 \
+-H "Content-Type: application/json" \
+-d '{
+      "content": "Updated: This article was very insightful. Learned a lot from it!"
+    }'
+
+Delete a comment
+****************
+curl -X DELETE http://localhost:3000/comments/43
+
+Display all comments
+********************
+curl http://localhost:3000/comments
+
+
+TEST SECURED ROUTES
+*******************
+
+JWT token (long-lived or non-expiring)
+**************************************
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0MDMyODc1NiwiZXhwIjoyMDU1Njg4NzU2fQ.JBc6BMau2LE9JbrDh96UDR_G4KWQUyeMwFfMVnm5s5Y
+
+curl -X GET  http://localhost:3000/auth/me -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTczOTY0MTkxNH0.gaZat7_W-wrzQ0iOzt-1JXiUikkMLO2WbIZafTVakKo"
+
+Display all posts
+*****************
+curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0MDMyODc1NiwiZXhwIjoyMDU1Njg4NzU2fQ.JBc6BMau2LE9JbrDh96UDR_G4KWQUyeMwFfMVnm5s5Y" http://localhost:3000/posts
+
+Display a single post ( display post by id)
+*******************************************
+curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0MDMyODc1NiwiZXhwIjoyMDU1Njg4NzU2fQ.JBc6BMau2LE9JbrDh96UDR_G4KWQUyeMwFfMVnm5s5Y" http://localhost:3000/posts/14
+
+Create post
+***********
+curl -X POST http://localhost:3000/posts \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0MDAzMjI0MSwiZXhwIjoyMDU1MzkyMjQxfQ.4LA9iX5guaOg-mIFlGIrE3MvyxIPZ4aOfUzQiCsCbMI"\
+-d '{
+      "title": "JinJin Summary",
+      "content": "This is the content of Jinjin Summary secure post.",
+      "published": true,
+      "authorId": 4
+    }'
+
+Update a post
+*************
+curl -X PUT http://localhost:3000/posts/27 \
+     -H "Content-Type: application/json" \
+     -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0MDMyODc1NiwiZXhwIjoyMDU1Njg4NzU2fQ.JBc6BMau2LE9JbrDh96UDR_G4KWQUyeMwFfMVnm5s5Y" \
+     -d '{
+           "title": "My third Blog Post",
+           "content": "This is the content of my secured third blog post.",
+           "published": true
+         }'
+
+Delete a post
+*************
+curl -X DELETE http://localhost:3000/posts/14 \
+     -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0MDAzMjI0MSwiZXhwIjoyMDU1MzkyMjQxfQ.4LA9iX5guaOg-mIFlGIrE3MvyxIPZ4aOfUzQiCsCbMI"
+
+Display all comments
+********************
+curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0MDMyODc1NiwiZXhwIjoyMDU1Njg4NzU2fQ.JBc6BMau2LE9JbrDh96UDR_G4KWQUyeMwFfMVnm5s5Y" http://localhost:3000/comments
+
+curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0MDMyODc1NiwiZXhwIjoyMDU1Njg4NzU2fQ.JBc6BMau2LE9JbrDh96UDR_G4KWQUyeMwFfMVnm5s5Y" http://localhost:3000/comments/45
+
+Create a comment
+****************
+curl -X POST http://localhost:3000/comments \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0MDMyODc1NiwiZXhwIjoyMDU1Njg4NzU2fQ.JBc6BMau2LE9JbrDh96UDR_G4KWQUyeMwFfMVnm5s5Y" \
+-d '{
+      "content": "Victorine first, Ngando second, Wolonge third.",
+      "username": "kato_namuene",
+      "email": "namuene@k.cm",
+      "postId": 33,
+      "userId": 4
+    }'
+
+Update a comment
+****************
+curl -X PUT http://localhost:3000/comments/50 \
+     -H "Content-Type: application/json" \
+     -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0MDAzMjI0MSwiZXhwIjoyMDU1MzkyMjQxfQ.4LA9iX5guaOg-mIFlGIrE3MvyxIPZ4aOfUzQiCsCbMI" \
+-H "Content-Type: application/json" \
+-d '{
+      "content": "Updated: Jinjin loves her family so much!"
+    }'
+
+Delete a comment
+****************
+curl -X DELETE http://localhost:3000/comments/47 \
+     -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0MDAzMjI0MSwiZXhwIjoyMDU1MzkyMjQxfQ.4LA9iX5guaOg-mIFlGIrE3MvyxIPZ4aOfUzQiCsCbMI"

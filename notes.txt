@@ -1,0 +1,174 @@
+Start the PSQL Database service
+*******************************
+brew services start postgresql@14
+
+Stop the PSQL Database service
+*******************************
+brew services stop postgresql@14
+
+1. Initialize a New Project
+mkdir file-uploader-app
+cd file-uploader-app
+npm init -y
+
+2. Install Dependencies
+Run the following command to install the required dependencies:
+
+2.1 Core Dependencies:
+npm install express prisma @prisma/client passport passport-local express-session bcrypt body-parser multer dotenv
+
+2.2 Development Dependencies:
+npm install --save-dev nodemon
+
+3. Set Up the Project Structure
+Organize your project files. Run these commands:
+
+mkdir prisma controllers routes middlewares views public uploads
+touch app.js .env
+
+3.1 Folders Descriptions
+prisma/: For the Prisma schema and migrations.
+controllers/: For application logic.
+routes/: For API routes.
+middlewares/: For any custom middleware (e.g., authentication).
+views/: For rendering templates (if applicable).
+public/: For static files.
+uploads/: To store uploaded files temporarily.
+
+4. Initialize Prisma
+Run the following commands to initialize Prisma in your project:
+
+npx prisma init
+This creates a prisma/schema.prisma file and sets up the .env file with the DATABASE_URL variable.
+
+5. Set Up Your .env File
+Open .env and define your database connection string:
+
+DATABASE_URL="postgresql://user:password@localhost:5432/file_uploader_db"
+SESSION_SECRET="your_secret_here"
+Replace user, password, localhost, 5432, and file_uploader_db with your PostgreSQL database credentials.
+
+6. Edit schema.prisma
+Define your database schema in prisma/schema.prisma. Here's an example:
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  password String
+  createdAt DateTime @default(now())
+}
+
+model File {
+  id       Int    @id @default(autoincrement())
+  fileName String
+  filePath String
+  uploadedAt DateTime @default(now())
+}
+Run the following to apply the changes and generate the Prisma client:
+
+npx prisma migrate dev --name init
+npx prisma generate
+
+7. Create and configure the Database
+Run the following command to create the database for your app:
+
+CREATE DATABASE file_uploader_db;
+
+7.1 Create a New User
+If you don't already have a user, create one and give it a password. Replace username and password with your desired credentials:
+
+CREATE USER "name_user" WITH PASSWORD 'your_password'; (since drnamuene is already my default user, i did not create a new user)
+
+7.2 Grant Permissions
+Grant full access to the newly created database for your user:
+
+GRANT ALL PRIVILEGES ON DATABASE file_uploader_db TO file_uploader_user;
+This ensures the user can read from and write to the database.
+
+7.3 Connect to the Database
+Switch to the newly created database to set up schema-level permissions:
+
+\c file_uploader_db
+Grant permissions on all schemas and tables to the user:
+
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO drnamuene;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO drnamuene;
+GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public TO drnamuene;
+
+7.4 Update .env File
+Now update your .env file with the correct DATABASE_URL. Replace your_password with the password you set earlier:
+
+DATABASE_URL="postgresql://drnamuene:0000@localhost:5432/file_uploader_db"
+
+8. Run the Migration (to map the models in the schema to the database)
+Run the migration to create the tables in your database:
+
+npx prisma migrate dev --name init
+npx prisma generate
+
+9. Test the Database Connection
+Go back to your terminal and run the following Prisma command to verify the connection:
+
+npx prisma db pull
+If everything is set up correctly, Prisma will successfully connect to the database.
+
+10. Install Prisma Session Store
+Install the Prisma session store library:
+
+npm install @quixo3/prisma-session-store
+
+11. Update prisma/schema.prisma
+Add a Session model for storing sessions in the database:
+
+model Session {
+  id           String   @id @default(cuid())
+  sid          String   @unique
+  data         String
+  expiresAt    DateTime
+}
+
+11.1 Run the following commands to map the Session model to the database:
+
+npx prisma migrate dev --name add_sessions
+npx prisma generate
+
+12. Add Flash Messages for Errors
+To handle flash messages for login failure or user already exists errors, install connect-flash:
+
+npm install connect-flash
+
+12.1 Update app.js to use connect-flash:
+
+const flash = require('connect-flash');
+
+// Add flash middleware
+app.use(flash());
+
+// Add global variables for flash messages
+app.use((req, res, next) => {
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  res.locals.error = req.flash('error');
+  next();
+});
+
+13. Install the express-flash package
+npm install express-flash
+
+14. Install ejs package
+npm install ejs
+PSQL
+15. Install the ejs-mate pakage
+npm install ejs-mate
+
+16. Run the app
+npx nodemon app.js
