@@ -79,7 +79,7 @@ app.post('/logout', authenticateToken, authController.logout); // Use the logout
 
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`); // Log the server URL
+  console.log(`Server is running on ${PORT}`); // Log the server URL
 });
 
 // Graceful shutdown for Prisma
