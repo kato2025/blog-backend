@@ -22,9 +22,6 @@ app.use(express.json()); // Parse JSON bodies
 // Enable CORS
 const cors = require('cors');
 
-// Allow CORS for specific domains
-const cors = require('cors');
-
 // Allow CORS for specific domains, including localhosts and production URLs
 app.use(cors({
   origin: [
