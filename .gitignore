@@ -1,5 +1,18 @@
-# Keep these folders and files out of version control
-curlTests.txt
-notes.txt
-node_modules/
-.env
+# Ignore environment variables  
+.env  
+
+# Ignore dependencies  
+node_modules/  
+
+# Ignore test and personal notes files  
+curlTests.txt  
+notes.txt  
+
+# Ignore any generated token scripts (if not needed in version control)  
+generateToken.js  
+
+# Ignore log files and system files (optional but recommended)  
+*.log  
+npm-debug.log*  
+yarn-debug.log*  
+yarn-error.log*  
