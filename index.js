@@ -20,10 +20,22 @@ const PORT = process.env.PORT || 3000; // Set the port to the environment variab
 app.use(express.json()); // Parse JSON bodies
 
 // Enable CORS
+const cors = require('cors');
+
+// Allow CORS for specific domains
+const cors = require('cors');
+
+// Allow CORS for specific domains, including localhosts and production URLs
 app.use(cors({
-  origin: ['https://blog-backend-kh3c.onrender.com'], // Allow frontend
-  credentials: true, // Allow cookies and authentication headers
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow these methods
+  origin: [
+    'https://namuenetecblogmanagement.netlify.app', // Blog management front-end
+    'https://blogreader.netlify.app', // Comment management front-end
+    'http://localhost:3000', // Local backend (Node.js)
+    'http://localhost:5173', // Local front-end (React)
+    'http://localhost:3001', // Another local front-end (if applicable)
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true, // Only needed if using cookies for authentication
 }));
 
 // Unified error handler middleware
