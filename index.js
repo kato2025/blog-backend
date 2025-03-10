@@ -19,9 +19,6 @@ const PORT = process.env.PORT || 3000; // Set the port to the environment variab
 // Middleware to parse JSON bodies
 app.use(express.json()); // Parse JSON bodies
 
-// Enable CORS
-const cors = require('cors');
-
 // Allow CORS for specific domains, including localhosts and production URLs
 app.use(cors({
   origin: [
